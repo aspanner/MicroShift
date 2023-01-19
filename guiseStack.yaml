@@ -43,9 +43,9 @@ spec:
               type: RuntimeDefault
           ports:
             - name: guiseai
-              containerPort: 65432  #   The image runs on local port - 65432
+              containerPort: 30000  #   The image runs on local port - 65432
               protocol: TCP
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           terminationMessagePolicy: File
           image: my-registry-quay-myquay.apps.anomaly-cluster.rqdu.p1.openshiftapps.com/edgerobotics/model
       restartPolicy: Always
