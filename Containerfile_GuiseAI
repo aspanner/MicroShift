@@ -1,0 +1,51 @@
+#!/bin/bash
+
+
+#docs: https://catalog.redhat.com/software/container-stacks/detail/6334198b06cd1a9b04700195
+#FROM quay.io/openvino/rhel8_runtime:latest
+#FROM registry.connect.redhat.com/intel/openvino-dev
+FROM registry.connect.redhat.com/intel/openvino-runtime
+
+
+ENV TZ=Asia/Kolkata \
+    DEBIAN_FRONTEND=noninteractive
+LABEL maintainer="Aman <aman@guise.ai> & Andreas <aspanner@redhat.com>"
+WORKDIR /app
+USER root
+
+# RUN apt-get update -y \
+#     && apt-get install -y python3-pip python3-dev \
+#     && apt-get install -y ffmpeg
+
+RUN yum update -y 
+
+RUN yum install -y python3-pip 
+
+    # && yum install -y python3-devel.x86_64  \
+    # && yum install -y ffmpeg
+
+
+# RUN apt-get install -y mongodb
+# RUN yum install -y mongodb
+
+COPY ./requirements.txt /app/requirements.txt 
+# setup scipy and scikit requirements
+
+# uninstall Cython, numpy and scipy if already installed
+# RUN pip3 uninstall numpy scipy Cython
+
+# pip3 install -U Cython==0.28.5
+RUN pip3 install --ignore-installed Cython==0.28.5
+RUN pip3 install -U numpy==1.18.0
+
+RUN pip install -r requirements.txt
+#RUN pip uninstall Jinja2
+RUN pip install --ignore-installed Jinja2==3.0.3
+
+WORKDIR /app
+
+COPY . /app
+EXPOSE 65432
+# EXPOSE 65433
+CMD [ "python3","-u","./run.py" ]
+
